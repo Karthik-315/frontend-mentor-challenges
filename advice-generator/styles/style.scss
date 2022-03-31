@@ -1,0 +1,112 @@
+@import "./mixins";
+@import "./commonStyles";
+
+:root {
+    --header-height: 3rem;
+}
+
+.header {
+    @include useFlex();
+    height: var(--header-height);
+}
+
+.theme-icon {
+    color: hsl(196, 21%, 86%);
+    font-size: 1.5rem;
+}
+
+body.light-mode .theme-icon {
+    color: hsl(218, 23%, 16%);
+}
+
+.main {
+    @include useFlex();
+    height: calc(100vh - var(--header-height));
+}
+
+.advice-container {
+    position: relative;
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 1.75rem 1.5rem 2.5rem 1.5rem;
+    background: hsl(217, 19%, 24%);
+    color: hsl(196, 21%, 86%);
+    border-radius: 0.5rem;
+}
+
+body.light-mode .advice-container {
+    box-shadow: 0.4rem 0.4rem 2rem 0 hsl(218, 23%, 16%);
+}
+
+.advice-title,
+.advice-text {
+    text-align: center;
+}
+
+.advice-title {
+    text-transform: uppercase;
+    letter-spacing: 0.3rem;
+    color: hsl(150, 100%, 66%);
+}
+
+.divider {
+    padding: 1rem 0;
+}
+
+.divider-image {
+    width: 100%;
+}
+
+.new-advice-button {
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    @include useFlex();
+    padding: 1rem;
+    border-radius: 50%;
+    background: hsl(150, 100%, 66%);
+    transform: translateX(-50%);
+    transition: box-shadow 0.3s ease-out;
+}
+
+.new-advice-button:hover {
+    box-shadow: 0 0 1.75rem 0 hsl(150, 100%, 66%);
+}
+
+.new-advice-button.animate {
+    margin: 0;
+    animation: rotate-animation 2.5s;
+    pointer-events: none;
+}
+
+@keyframes rotate-animation {
+    0% {
+        opacity: 0.5;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    40% {
+        opacity: 0.5;
+    }
+
+    60% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@media (min-width: 768px) {
+    .advice-container {
+        max-width: 40rem;
+    }
+}

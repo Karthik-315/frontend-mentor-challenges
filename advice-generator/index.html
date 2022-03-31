@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <title>Advice Generator</title>
+        <script defer src="scripts/app.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+            integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+    </head>
+
+    <body>
+        <header class="header">
+            <button class="button theme-button">
+                <i class="fa-solid fa-sun theme-icon theme--light"></i>
+                <i class="fa-solid fa-moon theme-icon theme--dark hidden"></i>
+            </button>
+        </header>
+
+        <main class="main">
+            <section class="advice-container">
+                <article>
+                    <h5 class="advice-title">Advice #123</h5>
+
+                    <h2 class="advice-text">
+                        When having a clear out, ask yourself if an item has any
+                        financial, practical or sentimental value. If not, chuck it.
+                    </h2>
+                </article>
+
+                <article class="divider">
+                    <img
+                        src="./images/pattern-divider-mobile.svg"
+                        alt="Mobile Divider"
+                        class="divider-image"
+                    />
+                </article>
+
+                <article>
+                    <button class="button new-advice-button">
+                        <img
+                            src="./images/icon-dice.svg"
+                            alt="New Advice"
+                            class="dice-image"
+                        />
+                    </button>
+                </article>
+            </section>
+        </main>
+    </body>
+</html>
