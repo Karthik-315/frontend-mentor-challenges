@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="./favicon-32x32.png" />
+        <link rel="stylesheet" href="styles/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+            integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <title>Interactive Comments Section</title>
+        <script defer type="text/javascript" src="../common-utils/utils.js"></script>
+        <script defer type="text/javascript" src="scripts/app.js"></script>
+    </head>
+
+    <body class="body">
+        <header class="header">
+            <h2 class="header__title">Interactive Comments Section</h2>
+
+            <section>
+                <article class="header__menu-container">
+                    <button class="button menu-button">
+                        <div class="menu-bar bar--1"></div>
+                        <div class="menu-bar bar--2"></div>
+                        <div class="menu-bar bar--3"></div>
+                    </button>
+                </article>
+
+                <article class="header__buttons">
+                    <button class="button theme-button">
+                        <i class="fa-solid fa-sun theme-icon theme--light"></i>
+                        <i class="fa-solid fa-moon theme-icon theme--dark hidden"></i>
+                        <span class="button-tooltip tooltip--theme">Change Theme</span>
+                    </button>
+
+                    <button class="button info-button">
+                        <i class="fa-brands fa-github"></i>
+                        <span class="button-tooltip tooltip--github"
+                            >Link to gihub repo</span
+                        >
+                    </button>
+
+                    <button class="button load-button">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <span class="button-tooltip tooltip--file"
+                            >Load test data from file</span
+                        >
+                    </button>
+                </article>
+            </section>
+        </header>
+
+        <section class="modal-overlay hidden"></section>
+
+        <main class="main">
+            <!-- Data appears here from JS -->
+        </main>
+
+        <footer class="footer">
+            Challenge by
+            <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+                >Frontend Mentor</a
+            >. Coded by <a href="#">Your Name Here</a>.
+        </footer>
+    </body>
+</html>

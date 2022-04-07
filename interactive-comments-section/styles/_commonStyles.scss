@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    font-family: "Rubik", sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: hsl(210, 24%, 13%);
+    scroll-behavior: smooth;
+}
+
+body.light-mode {
+    background: hsl(223, 19%, 93%);
+}
+
+.button {
+    font-family: "Rubik", sans-serif;
+    border: 0;
+    outline: 0;
+    background: none;
+    color: hsl(223, 19%, 93%);
+    cursor: pointer;
+}
+
+body.light-mode .button {
+    color: hsl(210, 24%, 13%);
+}
+
+.hidden {
+    display: none !important;
+}

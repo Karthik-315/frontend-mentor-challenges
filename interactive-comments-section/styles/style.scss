@@ -1,0 +1,659 @@
+@import "./mixins";
+@import "./commonStyles";
+
+:root {
+    --header-height: 7rem;
+}
+
+html {
+    font-size: 10px;
+}
+
+.header {
+    position: relative;
+    @include useFlex($justifyDir: space-between);
+    height: var(--header-height);
+    padding: 0 2rem;
+    color: hsl(196, 21%, 86%);
+}
+
+body.light-mode .header {
+    color: hsl(218, 23%, 16%);
+}
+
+.header__title {
+    font-size: 2rem;
+    font-weight: 300;
+    max-width: 70%;
+}
+
+.header__menu-container {
+    position: absolute;
+    right: 4rem;
+    transform: translateX(50%);
+}
+
+.menu-button {
+    margin: 0 1rem;
+}
+
+.menu-bar {
+    width: 30px;
+    height: 5px;
+    margin: 5px;
+    background: hsl(196, 21%, 86%);
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+}
+
+.bar--1.menu-active {
+    transform: rotateZ(45deg) translate(6px, 8px);
+}
+
+.bar--2.menu-active {
+    opacity: 0;
+}
+
+.bar--3.menu-active {
+    transform: rotateZ(-45deg) translate(6px, -8px);
+}
+
+body.light-mode .menu-bar {
+    background: hsl(218, 23%, 16%);
+}
+
+.header__buttons {
+    @include useFlex($dir: column);
+    position: absolute;
+    top: 6rem;
+    right: 4rem;
+    transform: translate(50%, -200%);
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out, transform 0.5s ease-in-out;
+    z-index: 4;
+}
+
+.header__buttons.header-buttons-active {
+    transform: translate(50%, 0);
+    opacity: 1;
+    padding: 0.3rem;
+    background: hsla(196, 21%, 86%, 0.6);
+    border-radius: 0.2rem;
+}
+
+body.light-mode .header__buttons {
+    background: hsla(210, 24%, 13%, 0.6);
+}
+
+.theme-button,
+.info-button,
+.load-button {
+    position: relative;
+    margin: 1.25rem auto;
+}
+
+.theme-icon,
+.fa-github,
+.fa-file-arrow-down {
+    color: hsl(218, 23%, 16%);
+    font-size: 1.75rem;
+}
+
+body.light-mode .theme-icon,
+body.light-mode .fa-github,
+body.light-mode .fa-file-arrow-down {
+    color: hsl(196, 21%, 86%);
+}
+
+.button-tooltip {
+    position: absolute;
+    top: 2.5rem;
+    left: -5rem;
+    right: -4rem;
+    padding: 0.5rem 0.25rem;
+    background: hsla(196, 21%, 86%, 1);
+    color: hsl(218, 23%, 16%);
+    opacity: 0;
+    border-radius: 0.3rem;
+    transform: rotateX(90deg);
+    transition: opacity 0.2s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.tooltip--file {
+    right: -3rem;
+}
+
+body.light-mode .button-tooltip {
+    background: hsla(218, 23%, 16%, 0.8);
+    color: hsl(196, 21%, 86%);
+}
+
+.theme-button:hover > .button-tooltip,
+.info-button:hover > .button-tooltip,
+.load-button:hover > .button-tooltip {
+    opacity: 1;
+    transform: rotateX(0);
+}
+
+.main {
+    position: relative;
+    @include useFlex($dir: column, $justifyDir: flex-start);
+    min-height: calc(100vh - var(--header-height) - 2rem);
+    margin-top: 2rem;
+    padding: 0 1rem;
+    color: hsl(196, 21%, 86%);
+    overflow-y: auto;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(0.25rem);
+    z-index: 2;
+}
+
+body.light-mode .main {
+    color: hsl(218, 23%, 16%);
+}
+
+.comment-sort,
+.comment,
+.comment-reply,
+.comment-new,
+.comment--edit {
+    position: relative;
+    background: hsl(212, 24%, 26%);
+    min-width: 100%;
+    margin: 1rem 0;
+    padding: 1rem;
+    font-size: 1.25rem;
+    border-radius: 0.2rem;
+}
+
+.comment--edit {
+    color: hsl(223, 19%, 93%);
+}
+
+body.light-mode .comment,
+body.light-mode .comment-reply,
+body.light-mode .comment-new,
+body.light-mode .comment--edit {
+    background: #fff;
+}
+
+body.light-mode .comment--edit {
+    color: hsl(218, 23%, 16%);
+}
+
+.comment-sort {
+    @include useFlex();
+    background: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sort-button-container {
+    position: relative;
+    margin-right: auto;
+}
+
+.sort-button {
+    @include useFlex();
+    width: 12rem;
+    padding: 1rem;
+    font-weight: 500;
+    background: hsla(196, 21%, 86%, 0.25);
+    border-radius: 0.3rem;
+    transition: transform 0.3s ease-in-out, box-shadow 0.5s ease;
+}
+
+body.light-mode .sort-button {
+    background: hsla(210, 24%, 13%, 0.3);
+}
+
+.sort-button:active {
+    transform: scale(0.95);
+}
+
+.sort-button:hover {
+    box-shadow: inset 0.1rem 0.1rem 0.1rem 0 rgb(201, 201, 201),
+        inset -0.1rem -0.1rem 0.1rem 0 rgb(201, 201, 201);
+}
+
+body.light-mode .sort-button:hover {
+    box-shadow: inset 0.1rem 0.1rem 0.1rem 0 rgb(56, 56, 56),
+        inset -0.1rem -0.1rem 0.1rem 0 rgb(56, 56, 56);
+}
+
+.sort-text {
+    font-size: 1.25rem;
+    margin-right: 1rem;
+}
+
+.sort-options {
+    position: absolute;
+    left: 0;
+    bottom: calc(-100% - 8.25rem);
+    right: 0;
+    background: hsla(196, 21%, 86%, 0.85);
+    color: hsl(210, 24%, 13%);
+    border-radius: 0.1rem;
+    opacity: 0;
+    transform: translateY(-300%);
+    z-index: 2;
+    transition: opacity 0.1s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.sort-options.sort-menu-active {
+    opacity: 1;
+    transform: translateY(0%);
+}
+
+body.light-mode .sort-options {
+    background: hsla(210, 24%, 13%, 0.85);
+    color: hsl(196, 21%, 86%);
+}
+
+.sort-option {
+    margin: 2rem 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.comment-reply {
+    min-width: calc(100% - 4rem);
+    margin: 1rem 0 1rem 2rem;
+}
+
+.comment-new {
+    width: 100%;
+    padding: 3rem 1rem 1rem 1rem;
+}
+
+.comment--header {
+    @include useFlex($justifyDir: flex-start);
+}
+
+.comment__avatar {
+    height: 3rem;
+    width: auto;
+}
+
+.comment__author,
+.comment__date,
+.comment__avatar {
+    margin: 0 0.5rem;
+}
+
+.comment__date {
+    margin-left: auto;
+}
+
+.vertical-reply-line {
+    position: absolute;
+    top: -1rem;
+    right: 0;
+    bottom: -1rem;
+    left: -1.8rem;
+    width: 1px;
+    background: hsla(211, 10%, 45%, 0.5);
+}
+
+body.light-mode .vertical-reply-line {
+    background: hsla(212, 24%, 26%, 0.5);
+}
+
+.comment--content {
+    margin-top: 1.5rem;
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+}
+
+.content__replying-to {
+    font-weight: 800;
+}
+
+.comment--footer {
+    @include useFlex($justifyDir: space-between);
+}
+
+.comment__votes {
+    @include useFlex();
+    width: 8rem;
+    height: 3rem;
+    background: hsl(211, 10%, 45%);
+    border-radius: 0.3rem;
+    padding: 0;
+}
+
+body.light-mode .comment__votes {
+    background: hsl(223, 19%, 93%);
+}
+
+.vote-button {
+    flex: 1 0 auto;
+    height: 100%;
+    padding: 0.5rem 0.4rem;
+    transition: color 0.3s ease-in-out, background 0.3s ease-in-out;
+}
+
+.upvote-button {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+.downvote-button {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+.upvote-button:hover {
+    color: #fff;
+    background: hsl(130, 83%, 39%);
+}
+
+.downvote-button:hover {
+    color: #fff;
+    background: hsl(358, 78%, 51%);
+}
+
+.vote-counter {
+    flex: 1 0 auto;
+    margin: 0.5rem 0;
+    padding: 0 0.1rem;
+    font-weight: 600;
+    text-align: center;
+    pointer-events: none;
+}
+
+.action__button-container {
+    @include useFlex();
+}
+
+.action-button {
+    margin: 0 0.1rem;
+    padding: 1rem;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+    transition: color 0.3s ease-in-out, background 0.3s ease-in-out;
+}
+
+.action-icon {
+    font-size: 1.25rem;
+}
+
+.action-button:hover {
+    color: hsl(212, 24%, 26%);
+    background: #fff;
+}
+
+body.light-mode .action-button:hover {
+    color: #fff;
+    background: hsl(212, 24%, 26%);
+}
+
+.delete-button:hover,
+.discard-button:hover,
+body.light-mode .delete-button:hover,
+body.light-mode .discard-button:hover {
+    color: #fff;
+    background: hsl(358, 79%, 66%);
+}
+
+.action-reply,
+.action-edit,
+.action-delete,
+.action-save,
+.action-discard {
+    margin: 0 0.4rem;
+    font-weight: 600;
+}
+
+.delete-modal {
+    position: absolute;
+    top: 0%;
+    left: 5%;
+    right: 5%;
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0.1rem 0.1rem 0.5rem 0 rgb(143, 143, 143);
+    z-index: 2;
+}
+
+.comment:last-child .delete-modal,
+.comment-reply:last-child .delete-modal {
+    top: -100%;
+}
+
+body.light-mode .delete-modal {
+    background: hsl(223, 19%, 93%);
+    box-shadow: 0.1rem 0.1rem 0.5rem 0 rgb(143, 143, 143);
+}
+
+.delete__title {
+    font-size: 2rem;
+    margin-top: 0.2rem;
+}
+
+.delete__text {
+    font-size: 1.25rem;
+}
+
+.delete-confirmation {
+    @include useFlex($justifyDir: space-around);
+    margin-top: 2rem;
+}
+
+.do-not-delete,
+.confirm-delete {
+    flex: 1 0 auto;
+    margin: 0 0.2rem;
+    padding: 1.25rem 1rem;
+    border-radius: 0.25rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+body.light-mode .do-not-delete,
+body.light-mode .confirm-delete {
+    color: #fff;
+}
+
+.do-not-delete {
+    background: hsl(211, 10%, 45%);
+}
+
+.confirm-delete {
+    background: hsl(358, 79%, 66%);
+}
+
+.new-comment-form {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
+}
+
+.new-comment-textbox-container {
+    position: relative;
+    grid-row: 1/3;
+    grid-column: 1/3;
+}
+
+.new-comment-textbox {
+    width: 100%;
+    font-size: 1.25rem;
+    background: hsl(212, 24%, 26%);
+    color: hsl(196, 21%, 86%);
+    padding: 0.5rem;
+    border: 0;
+    outline: 0.1rem solid hsl(196, 21%, 86%);
+    border-radius: 0.5rem;
+}
+
+.new-comment-textbox::after {
+    content: "WAT";
+    display: inline-block;
+    bottom: 0;
+    color: white;
+}
+
+body.light-mode .new-comment-textbox {
+    background: #fff;
+    color: hsl(218, 23%, 16%);
+    outline: 0.1rem solid hsl(218, 23%, 16%);
+}
+
+.new-comment-textbox:focus {
+    outline: 0.15rem solid hsl(196, 21%, 86%);
+}
+
+body.light-mode .new-comment-textbox:focus {
+    outline: 0.15rem solid hsl(218, 23%, 16%);
+}
+
+.new-comment-textbox.error,
+body.light-mode.new-comment-textbox.error {
+    outline: 0.15rem solid hsl(358, 79%, 66%);
+}
+
+.comment-text-messages {
+    position: absolute;
+    left: 50%;
+    top: -2rem;
+    font-weight: 600;
+    color: hsl(358, 78%, 51%);
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity 0.3s ease-in-out;
+}
+
+.new-comment-textbox.error ~ .comment-text-messages {
+    opacity: 1;
+}
+
+.new-comment-submit {
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    background: hsl(238, 40%, 52%);
+    color: #fff;
+    text-transform: uppercase;
+    border-radius: 0.3rem;
+    transition: all 0.3s ease-in-out;
+}
+
+body.light-mode .new-comment-submit {
+    color: #fff;
+    box-shadow: 0.1rem 0.2rem 0.5rem 0 rgb(179, 179, 179);
+}
+
+.new-comment-submit:hover {
+    background: #fff;
+    color: hsl(212, 24%, 26%);
+}
+
+body.light-mode .new-comment-submit:hover {
+    background: hsl(212, 24%, 26%);
+}
+
+.new-comment-submit:active {
+    transform: scale(0.95);
+}
+
+body.light-mode .new-comment-submit:active {
+    box-shadow: none;
+}
+
+/* Responsive design */
+
+@media (min-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    .header__buttons {
+        position: static;
+        @include useFlex();
+        transform: translate(0, 0);
+        opacity: 1;
+        background: none;
+    }
+
+    body.light-mode .header__buttons {
+        background: none;
+    }
+
+    .theme-button,
+    .info-button,
+    .load-button {
+        margin: 0 1rem;
+    }
+
+    .theme-icon,
+    .fa-github,
+    .fa-file-arrow-down {
+        color: hsl(196, 21%, 86%);
+        font-size: 1.75rem;
+    }
+
+    body.light-mode .theme-icon,
+    body.light-mode .fa-github,
+    body.light-mode .fa-file-arrow-down {
+        color: hsl(218, 23%, 16%);
+    }
+
+    .header__menu-container {
+        position: static;
+        display: none;
+    }
+
+    .main {
+        margin: 1rem auto;
+        width: 80rem;
+    }
+
+    .comment-reply {
+        margin: 1rem 0 1rem 4rem;
+    }
+
+    .sort-button-container {
+        margin-right: 0;
+        margin-left: auto;
+    }
+
+    .delete-modal {
+        left: 20%;
+        right: 20%;
+        padding: 3rem;
+    }
+
+    .do-not-delete,
+    .delete {
+        flex: 1 0 auto;
+        margin: 0 2rem;
+        padding: 1.25rem 1rem;
+    }
+
+    .new-comment-form {
+        @include useFlex($justifyDir: space-between);
+    }
+
+    .new-comment-avatar {
+        align-self: flex-start;
+    }
+
+    .new-comment-textbox-container {
+        width: 100%;
+    }
+
+    .new-comment-submit {
+        align-self: flex-start;
+    }
+}
