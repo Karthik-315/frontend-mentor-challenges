@@ -63,18 +63,19 @@ body.light-mode .menu-bar {
 }
 
 .header__buttons {
-    @include useFlex($dir: column);
+    @include useFlex();
     position: absolute;
-    top: 6rem;
-    right: 4rem;
-    transform: translate(50%, -200%);
+    top: 8rem;
+    right: 0;
+    left: 0;
+    transform: translateX(-200%);
     opacity: 0;
     transition: opacity 0.1s ease-in-out, transform 0.5s ease-in-out;
     z-index: 4;
 }
 
 .header__buttons.header-buttons-active {
-    transform: translate(50%, 0);
+    transform: translateX(0);
     opacity: 1;
     padding: 0.3rem;
     background: hsla(196, 21%, 86%, 0.6);
@@ -143,6 +144,11 @@ body.light-mode .button-tooltip {
     padding: 0 1rem;
     color: hsl(196, 21%, 86%);
     overflow-y: auto;
+    transition: margin 0.3s ease-in-out;
+}
+
+.main.header-buttons-active {
+    margin-top: 5.5rem;
 }
 
 .modal-overlay {
@@ -162,9 +168,12 @@ body.light-mode .main {
 
 .comment-sort,
 .comment,
-.comment-reply,
+.new-reply,
 .comment-new,
-.comment--edit {
+.comment--edit,
+.comment-reply,
+.reply--edit,
+.reply--new-reply {
     position: relative;
     background: hsl(212, 24%, 26%);
     min-width: 100%;
@@ -174,18 +183,30 @@ body.light-mode .main {
     border-radius: 0.2rem;
 }
 
-.comment--edit {
+.comment-reply,
+.new-reply {
+    min-width: calc(100% - 4rem);
+    margin: 1rem 0 1rem 2rem;
+}
+
+.comment--edit,
+.reply--edit,
+.reply--new-reply {
     color: hsl(223, 19%, 93%);
 }
 
 body.light-mode .comment,
+body.light-mode .new-reply,
 body.light-mode .comment-reply,
 body.light-mode .comment-new,
-body.light-mode .comment--edit {
+body.light-mode .comment--edit,
+body.light-mode .reply--edit,
+body.light-mode .reply--new-reply {
     background: #fff;
 }
 
-body.light-mode .comment--edit {
+body.light-mode .comment--edit,
+body.light-mode .reply--new-reply {
     color: hsl(218, 23%, 16%);
 }
 
@@ -237,7 +258,7 @@ body.light-mode .sort-button:hover {
 .sort-options {
     position: absolute;
     left: 0;
-    bottom: calc(-100% - 8.25rem);
+    top: calc(100% + 0.25rem);
     right: 0;
     background: hsla(196, 21%, 86%, 0.85);
     color: hsl(210, 24%, 13%);
@@ -263,11 +284,6 @@ body.light-mode .sort-options {
     font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
-}
-
-.comment-reply {
-    min-width: calc(100% - 4rem);
-    margin: 1rem 0 1rem 2rem;
 }
 
 .comment-new {
@@ -357,6 +373,13 @@ body.light-mode .comment__votes {
     background: hsl(130, 83%, 39%);
 }
 
+.upvote-button .vote-registered,
+.downvote-button .vote-registered {
+    color: #fff;
+    background: hsl(130, 83%, 39%);
+    pointer-events: none;
+}
+
 .downvote-button:hover {
     color: #fff;
     background: hsl(358, 78%, 51%);
@@ -371,8 +394,13 @@ body.light-mode .comment__votes {
     pointer-events: none;
 }
 
-.action__button-container {
+.action__button-container,
+.action__button-container--new-reply {
     @include useFlex();
+}
+
+.action__button-container--new-reply {
+    justify-content: flex-end;
 }
 
 .action-button {
@@ -385,6 +413,11 @@ body.light-mode .comment__votes {
 
 .action-icon {
     font-size: 1.25rem;
+    pointer-events: none;
+}
+
+.action-button > span {
+    pointer-events: none;
 }
 
 .action-button:hover {
@@ -399,8 +432,10 @@ body.light-mode .action-button:hover {
 
 .delete-button:hover,
 .discard-button:hover,
+.discard-reply-button:hover,
 body.light-mode .delete-button:hover,
-body.light-mode .discard-button:hover {
+body.light-mode .discard-button:hover,
+body.light-mode .discard-reply-button:hover {
     color: #fff;
     background: hsl(358, 79%, 66%);
 }
@@ -519,11 +554,16 @@ body.light-mode .new-comment-textbox:focus {
     outline: 0.15rem solid hsl(218, 23%, 16%);
 }
 
-.new-comment-textbox.error,
+/* .new-comment-textbox.error,
 body.light-mode.new-comment-textbox.error {
+    outline: 0.15rem solid hsl(358, 79%, 66%);
+} */
+
+.error {
     outline: 0.15rem solid hsl(358, 79%, 66%);
 }
 
+.main-comment-messages,
 .comment-text-messages {
     position: absolute;
     left: 50%;
@@ -533,10 +573,19 @@ body.light-mode.new-comment-textbox.error {
     opacity: 0;
     transform: translateX(-50%);
     transition: opacity 0.3s ease-in-out;
+    z-index: 5;
 }
 
-.new-comment-textbox.error ~ .comment-text-messages {
+.main-comment-messages {
+    top: auto;
+    bottom: 2rem;
+    border: 0;
+}
+
+.main-comment-messages.error,
+.comment-text-messages.error {
     opacity: 1;
+    outline: 0;
 }
 
 .new-comment-submit {
@@ -573,7 +622,7 @@ body.light-mode .new-comment-submit:active {
 
 /* Responsive design */
 
-@media (min-width: 768px) {
+@media screen and (min-width: 768px) {
     html {
         font-size: 14px;
     }
@@ -619,7 +668,8 @@ body.light-mode .new-comment-submit:active {
         width: 80rem;
     }
 
-    .comment-reply {
+    .comment-reply,
+    .new-reply {
         margin: 1rem 0 1rem 4rem;
     }
 

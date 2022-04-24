@@ -19,14 +19,12 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 
 /* Functions */
 const storeData = (data) =>
-    // Stores data into localStorage
     window.localStorage.setItem("commentData", JSON.stringify(data));
 
-// Gets data from localStorage.
 const fetchData = () => JSON.parse(window.localStorage.getItem("commentData"));
 
 const setSelectedElement = function (element) {
-    // Get the last class of any button to determine the selected comment / reply.
+    // Get the last class of any button to determine the selected comment.
     targetElementID = element.classList[element.classList.length - 1].split("--")[1];
     typeOfElement = element.closest("section").classList[0];
 };
@@ -48,8 +46,6 @@ const closeModal = function () {
 const setCreatedAtTime = function () {};
 
 const registerVotes = function (voteType) {
-    // Keeps track of total upvotes and downvotes.
-
     const voteCounterText = document.querySelector(
         `.${typeOfElement}--${targetElementID} .vote-counter`
     );
@@ -63,7 +59,6 @@ const registerVotes = function (voteType) {
     let existingComments = commentData.comments;
     let indexToBeUpdated;
 
-    // Update data to localStorage.
     if (typeOfElement === "comment") {
         indexToBeUpdated = existingComments.indexOf(
             existingComments.find((comment) => comment.id === +targetElementID)
@@ -90,7 +85,6 @@ const registerVotes = function (voteType) {
 const replyToComment = function () {
     const replyTextBoxClass = typeOfElement === "comment" ? typeOfElement : "reply";
 
-    // Set DOM elements required for reply textbox.
     const commentReplyButton = document.querySelector(
         `.reply-button.${replyTextBoxClass}--${targetElementID}`
     );
@@ -103,81 +97,14 @@ const replyToComment = function () {
         `.discard-reply-button.${replyTextBoxClass}--${targetElementID}`
     );
 
-    document.querySelector(`.reply-comment--${targetElementID}`).value = "";
-
+    // Display the comment reply text box
     document
         .querySelector(`.reply-comment--${targetElementID}`)
         .classList.remove("hidden");
 
-    // Enable reply textbox and relevant buttons
-    document.querySelector(`.new-reply--${targetElementID}`).classList.remove("hidden");
     commentReplyButton.classList.add("hidden");
     replySaveButton.classList.remove("hidden");
     replyDiscardButton.classList.remove("hidden");
-
-    const resetReplyBox = function () {
-        document.querySelector(`.new-reply--${targetElementID}`).classList.add("hidden");
-        commentReplyButton.classList.remove("hidden");
-        replySaveButton.classList.add("hidden");
-        replyDiscardButton.classList.add("hidden");
-    };
-
-    const saveReply = function () {
-        const replyText = document.querySelector(
-            `.reply-comment--${targetElementID}`
-        ).value;
-
-        if (replyText === "") {
-            console.log("Empty Reply Box");
-            const errorMessageContainer = document.querySelector(
-                `.main-reply-messages--${targetElementID}`
-            );
-            const currentReply = document.querySelector(
-                `.reply-comment--${targetElementID}`
-            );
-
-            currentReply.classList.add("error");
-            errorMessageContainer.classList.add("error");
-            errorMessageContainer.innerText = "Comment cannot be empty!";
-
-            setTimeout(() => {
-                errorMessageContainer.classList.remove("error");
-                currentReply.classList.remove("error");
-                errorMessageContainer.innerText = "";
-            }, 3000);
-
-            return;
-        }
-
-        // Remove multiple listeners
-        replySaveButton.removeEventListener("click", saveReply);
-        resetReplyBox();
-        let replyingTo = "";
-
-        if (typeOfElement === "comment") {
-            replyingTo = fetchData().comments.find(
-                (comment) => comment.id === +targetElementID
-            ).user.username;
-        } else if (typeOfElement === "comment-reply") {
-            fetchData().comments.forEach((comment) => {
-                console.log(comment.replies);
-                replyingTo = comment.replies.find(
-                    (reply) => reply.id === +targetElementID
-                )?.user?.username;
-            });
-        }
-        appendNewData(replyText, "reply", replyingTo);
-    };
-
-    const discardReply = function () {
-        // Remove multiple listeners
-        replyDiscardButton.removeEventListener("click", discardReply);
-        resetReplyBox();
-        return;
-    };
-
-    replySaveButton.addEventListener("click", saveReply);
-    replyDiscardButton.addEventListener("click", discardReply);
 };
 
 const editComment = function () {
@@ -224,48 +151,28 @@ const editComment = function () {
     const saveComment = function () {
         setSelectedElement(commentSaveButton);
 
-        const newDataTextRaw = document.querySelector(
+        // Remove event listeners to prevent this function from calling multiple times on the subsequent calls.
+        commentSaveButton.removeEventListener("click", saveComment);
+
+        const newCommentTextRaw = document.querySelector(
             `.edit-comment--${targetElementID}`
         ).value;
-
-        console.log(`New Comment: ${newDataTextRaw}`);
-        if (newDataTextRaw === "") {
-            console.log("Empty Edit Box");
-            const errorMessageContainer = document.querySelector(
-                `.main-edit-messages--${targetElementID}`
-            );
-            const currentComment = document.querySelector(
-                `.edit-comment--${targetElementID}`
-            );
-
-            currentComment.classList.add("error");
-            errorMessageContainer.classList.add("error");
-            errorMessageContainer.innerText = "Comment cannot be empty!";
-
-            setTimeout(() => {
-                errorMessageContainer.classList.remove("error");
-                currentComment.classList.remove("error");
-                errorMessageContainer.innerText = "";
-            }, 3000);
-
-            return;
-        }
 
         const newStartFilterPattern = /\n\s*.\w*\s\s/;
         const newEndFilterPattern = /\n\s*/;
 
-        let newDataText = newDataTextRaw
+        let newCommentText = newCommentTextRaw
             .replace(newStartFilterPattern, "")
             .replace(newEndFilterPattern, "");
 
         // Check if the new comment is the same as the old one (ie. no changes made)
         let isSameText = true;
 
-        if (commentText.split(" ").length != newDataText.split(" ").length) {
+        if (commentText.split(" ").length != newCommentText.split(" ").length) {
             isSameText = false;
         } else {
-            for (let index = 0; index < newDataText.length; index++) {
-                if (commentText[index] != newDataText[index]) {
+            for (let index = 0; index < newCommentText.length; index++) {
+                if (commentText[index] != newCommentText[index]) {
                     isSameText = false;
                     break;
                 }
@@ -285,11 +192,11 @@ const editComment = function () {
                             months[today.getMonth()]
                         }/${today.getFullYear()}`;
 
-                        reply.content = newDataText;
+                        reply.content = newCommentText;
                         reply.createdAt = dateString;
 
-                        newDataText = `
-                        <span class="content__replying-to">@${reply.replyingTo}&nbsp;&nbsp;</span>${newDataText}
+                        newCommentText = `
+                        <span class="content__replying-to">@${reply.replyingTo}&nbsp;&nbsp;</span>${newCommentText}
                         `;
                     }
                 });
@@ -318,10 +225,7 @@ const editComment = function () {
 
         document.querySelector(
             `.${typeOfElement}--${targetElementID} .comment--content`
-        ).innerHTML = newDataText;
-
-        // Remove event listeners to prevent this function from calling multiple times on the subsequent calls.
-        commentSaveButton.removeEventListener("click", saveComment);
+        ).innerHTML = newCommentText;
     };
 
     const discardComment = function () {
@@ -404,13 +308,16 @@ const setListeners = function (data) {
     modalOverlay = document.querySelector(".modal-overlay");
 
     const commentActionsContainer = document.querySelectorAll(".comment__actions");
+    const replyCommentButton = document.querySelectorAll(".reply-button");
+    const editCommentButton = document.querySelectorAll(".edit-button");
+    const deleteCommentButton = document.querySelectorAll(".delete-button");
     const modalCancelDeleteButton = document.querySelectorAll(".do-not-delete");
     const modalConfirmDeletButton = document.querySelectorAll(".confirm-delete");
 
-    const newDataForm = document.querySelector(".new-comment-form");
-    const newDataText = document.querySelector(".new-comment-textbox");
+    const newCommentForm = document.querySelector(".new-comment-form");
+    const newCommentText = document.querySelector(".new-comment-textbox");
     const commentTextMessage = document.querySelector(".comment-text-messages");
-    const newDataButton = document.querySelector(".new-comment-submit");
+    const newCommentButton = document.querySelector(".new-comment-submit");
 
     const upvoteButton = document.querySelectorAll(".upvote-button");
     const downvoteButton = document.querySelectorAll(".downvote-button");
@@ -445,6 +352,32 @@ const setListeners = function (data) {
         });
     });
 
+    /*  // Reply to comment
+    replyCommentButton.forEach((replyButton) => {
+        replyButton.addEventListener("click", function () {
+            setSelectedElement(this);
+            replyToComment();
+        });
+    });
+
+    // Edit Comment
+    editCommentButton.forEach((editButton) => {
+        editButton.addEventListener("click", function () {
+            // Fetch the comment on which the action was performed.
+            setSelectedElement(this);
+            editComment();
+        });
+    });
+
+    // Delete comment
+    deleteCommentButton.forEach((deleteButton) => {
+        deleteButton.addEventListener("click", function () {
+            // Fetch the comment on which the action was performed.
+            setSelectedElement(this);
+            showModal();
+        });
+    });
+ */
     modalCancelDeleteButton.forEach((cancelDeleteButton) => {
         cancelDeleteButton.addEventListener("click", closeModal);
     });
@@ -456,27 +389,39 @@ const setListeners = function (data) {
         });
     });
 
-    const processComment = function (e) {
+    newCommentButton.addEventListener("click", function (e) {
         e.preventDefault();
 
-        if (newDataText.value === "") {
-            newDataText.classList.add("error");
-            commentTextMessage.classList.add("error");
+        if (newCommentText.value === "") {
+            newCommentText.classList.add("error");
             commentTextMessage.innerHTML = "Comment cannot be empty!";
             setTimeout(() => {
-                newDataText.classList.remove("error");
-                commentTextMessage.classList.remove("error");
+                newCommentText.classList.remove("error");
             }, 3000);
 
             return;
         }
 
-        appendNewData(newDataText.value, "comment");
-        newDataText.value = "";
-    };
+        addNewComment(newCommentText.value);
+        newCommentText.value = "";
+    });
 
-    newDataButton.addEventListener("click", processComment);
-    newDataForm.addEventListener("submit", processComment);
+    newCommentForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if (newCommentText.value === "") {
+            newCommentText.classList.add("error");
+            commentTextMessage.innerHTML = "Comment cannot be empty!";
+            setTimeout(() => {
+                newCommentText.classList.remove("error");
+            }, 3000);
+
+            return;
+        }
+
+        addNewComment(newCommentText.value, data);
+        newCommentText.value = "";
+    });
 
     upvoteButton.forEach((btn) => {
         btn.addEventListener("click", function () {
@@ -493,18 +438,17 @@ const setListeners = function (data) {
     });
 };
 
-const appendNewData = function (newData, typeOfData, replyingToUser) {
-    // Adds new comment or reply to a comment
+const addNewComment = function (newComment) {
     const data = fetchData();
     const dateString = `${days[today.getDay()]}, ${today.getDate()}/${
         months[today.getMonth()]
     }/${today.getFullYear()}`;
 
-    const newDataID = listOfCommentIDs.length === 0 ? 1 : listOfCommentIDs.at(-1) + 1;
+    const newCommentID = listOfCommentIDs.length === 0 ? 1 : listOfCommentIDs.at(-1) + 1;
 
-    let newDataArray = {
-        id: +`${newDataID}`,
-        content: newData,
+    let newCommentArray = {
+        id: +`${newCommentID}`,
+        content: newComment,
         createdAt: dateString,
         score: 0,
         user: {
@@ -514,33 +458,13 @@ const appendNewData = function (newData, typeOfData, replyingToUser) {
             },
             username: data.currentUser.username,
         },
-        ...(typeOfData === "comment" && { replies: [] }),
-        ...(typeOfData === "reply" && { replyingTo: replyingToUser }),
+        replies: [],
     };
 
-    listOfCommentIDs.push(newDataArray.id);
+    listOfCommentIDs.push(newCommentArray.id);
+    data.comments.push(newCommentArray);
 
-    if (typeOfData === "comment") {
-        data.comments.push(newDataArray);
-    } else if (typeOfData === "reply") {
-        // Get the parent comment that this reply belongs to.
-        let parentCommentID;
-        if (typeOfElement === "comment") {
-            parentCommentID = targetElementID;
-        } else {
-            // If the data is a reply to another reply, find the parent comment first.
-            parentCommentID = document
-                .querySelector(`.comment-reply--${targetElementID}`)
-                .classList[1].split("-")[2];
-        }
-
-        // Push to replies array.
-        data.comments
-            .find((comment) => comment.id === +parentCommentID)
-            .replies.push(newDataArray);
-    }
-
-    /*
+    /* 
         Flush all comments and re-load the whole container with new ones.
         New approach needed.
     */
@@ -581,7 +505,10 @@ const displayComments = function (data) {
         } edit-comment-textbox hidden">
         </textarea>
 
-        <span class="main-comment-messages main-edit-messages--${comment.id}"></span>
+        <textarea rows="7" class="comment--new-reply reply-comment--${
+            comment.id
+        } reply-comment-textbox hidden">
+        </textarea>
 
         <article class="comment--footer">
             <div class="comment__votes">
@@ -609,6 +536,20 @@ const displayComments = function (data) {
                     }">
                         <i class="fa-solid fa-reply"></i>
                         <span class="action-reply">Reply</span>
+                    </button>
+
+                    <button class="button post-reply-button action-button comment--${
+                        comment.id
+                    } hidden">
+                        <i class="fa-regular fa-floppy-disk action-icon"></i>
+                        <span class="action-save">Post</span>
+                    </button>
+
+                    <button class="button discard-reply-button action-button comment--${
+                        comment.id
+                    } hidden">
+                        <i class="fa-solid fa-ban action-icon"></i>
+                        <span class="action-discard">Discard</span>
                     </button>
                 </div>
 
@@ -661,28 +602,8 @@ const displayComments = function (data) {
             </div>
         </article>
         `;
+
         commentHTML += `</section>`;
-
-        commentHTML += `
-            <section class="new-reply new-reply--${comment.id} hidden">
-                <textarea rows="7" class="reply--new-reply reply-comment--${comment.id} reply-comment-textbox hidden">
-                </textarea>
-
-                <span class="main-comment-messages main-reply-messages--${comment.id}"></span>
-                
-                <div class="action__button-container--new-reply">
-                    <button class="button post-reply-button action-button comment--${comment.id} hidden">
-                        <i class="fa-regular fa-floppy-disk action-icon"></i>
-                        <span class="action-save">Post</span>
-                    </button>
-
-                    <button class="button discard-reply-button action-button comment--${comment.id} hidden">
-                        <i class="fa-solid fa-ban action-icon"></i>
-                        <span class="action-discard">Discard</span>
-                    </button>
-                </div>
-            </section>
-        `;
 
         comment.replies.forEach((reply) => {
             commentReplyHTML = `<section class="comment-reply parent-comment-${comment.id} comment-reply--${reply.id}">`;
@@ -707,13 +628,16 @@ const displayComments = function (data) {
                     reply.replyingTo
                 }&nbsp;&nbsp;</span>${reply.content}
             </p>
-            
-            <textarea rows="7" class="reply--edit edit-comment--${
+
+            <textarea rows="7" class="comment--edit edit-comment--${
                 reply.id
             } edit-comment-textbox hidden">
             </textarea>
-
-            <span class="main-comment-messages main-edit-messages--${reply.id}"></span>
+            
+            <textarea rows="7" class="comment--new-reply reply-comment--${
+                reply.id
+            } reply-comment-textbox hidden">
+            </textarea>
 
             <article class="comment--footer">
                 <div class="comment__votes">
@@ -741,6 +665,20 @@ const displayComments = function (data) {
                         }">
                             <i class="fa-solid fa-reply action-icon"></i>
                             <span class="action-reply">Reply</span>
+                        </button>
+
+                        <button class="button post-reply-button action-button reply--${
+                            reply.id
+                        } hidden">
+                            <i class="fa-regular fa-floppy-disk action-icon"></i>
+                            <span class="action-save">Post</span>
+                        </button>
+    
+                        <button class="button discard-reply-button action-button reply--${
+                            reply.id
+                        } hidden">
+                            <i class="fa-solid fa-ban action-icon"></i>
+                            <span class="action-discard">Discard</span>
                         </button>
                     </div>
 
@@ -795,27 +733,6 @@ const displayComments = function (data) {
             `;
 
             commentReplyHTML += "</section>";
-
-            commentReplyHTML += `
-                <section class="new-reply new-reply--${reply.id} hidden">
-                    <textarea rows="7" class="reply--new-reply reply-comment--${reply.id} reply-comment-textbox hidden">
-                    </textarea>
-
-                    <span class="main-comment-messages main-reply-messages--${reply.id}"></span>
-                        
-                    <div class="action__button-container--new-reply">
-                        <button class="button post-reply-button action-button reply--${reply.id} hidden">
-                            <i class="fa-regular fa-floppy-disk action-icon"></i>
-                            <span class="action-save">Post</span>
-                        </button>
-
-                        <button class="button discard-reply-button action-button reply--${reply.id} hidden">
-                            <i class="fa-solid fa-ban action-icon"></i>
-                            <span class="action-discard">Discard</span>
-                        </button>
-                    </div>
-                </section>
-             `;
             mainContainer.insertAdjacentHTML("afterbegin", commentReplyHTML);
         });
 
@@ -910,16 +827,12 @@ const parseData = function () {
 
         fetchCommentIDs(commentData);
     }
-
-    console.log(listOfCommentIDs);
 };
 
 // Start up everything.
 const intitialize = function () {
     setStorageVariable("commentsSectionTheme"); // From utils.js
     parseData();
-
-    console.log(fetchData());
 };
 
 intitialize();
